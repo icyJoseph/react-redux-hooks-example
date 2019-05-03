@@ -1,5 +1,5 @@
 import React from "react";
-import { useRedux, useActions, useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { decreaseCounter, increaseCounter, SET } from "./ducks/counter";
 import logo from "./logo.svg";
 import "./App.css";
@@ -10,17 +10,20 @@ function useSquared() {
 }
 
 function useReset() {
-  const toZero = useActions(() => ({ type: SET, payload: 0 }));
+  const dispatch = useDispatch();
+  const toZero = () => dispatch({ type: SET, payload: 0 });
   return toZero;
 }
 
 function App() {
-  // get the increase dispatcher from useRedux
-  const [count, increase] = useRedux(state => state.counter, increaseCounter);
-  // get the decrease dispatcher from useActions
-  const decrease = useActions(decreaseCounter);
   // get the dispatch method from redux store using useDispatch
   const dispatch = useDispatch();
+  // get the count using useSelector
+  const count = useSelector(state => state.counter);
+  // get the increase dispatcher from useRedux
+  const increase = () => dispatch(increaseCounter());
+  // get the decrease dispatcher from useActions
+  const decrease = () => dispatch(decreaseCounter());
   // use a custom hook to get a pre-calculated value
   const squared = useSquared();
 
